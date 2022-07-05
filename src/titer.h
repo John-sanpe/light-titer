@@ -139,7 +139,7 @@ TISTATIC TISTRUCT *TINAME##_next(const TISTRUCT *node)                  \
                               TISTRUCT, TIPARENT, TILEFT, TIRIGHT)      \
 TISTATIC TISTRUCT *TINAME##_pre_first(const TIROOT *root)               \
 {                                                                       \
-    return root->node;                                                  \
+    return root->TINODE;                                                \
 }                                                                       \
                                                                         \
 TISTATIC TISTRUCT *TINAME##_pre_next(const TISTRUCT *node)              \
@@ -210,7 +210,7 @@ TISTATIC TISTRUCT *                                                     \
 TINAME##_level_next(const TIROOT *root, unsigned long *index)           \
 {                                                                       \
     unsigned int depth = 63 - __builtin_clzll(++*index + 1);            \
-    TISTRUCT *node = root->node;                                        \
+    TISTRUCT *node = root->TINODE;                                      \
                                                                         \
     while (node && depth--) {                                           \
         if ((*index + 1) & (1UL << depth))                              \
