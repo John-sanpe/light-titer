@@ -139,6 +139,7 @@ TISTATIC TISTRUCT *TINAME##_next(const TISTRUCT *node)                  \
                               TISTRUCT, TIPARENT, TILEFT, TIRIGHT)      \
 TISTATIC TISTRUCT *TINAME##_pre_first(const TIROOT *root)               \
 {                                                                       \
+    /* Get the root node */                                             \
     return root->TINODE;                                                \
 }                                                                       \
                                                                         \
@@ -160,7 +161,7 @@ TISTATIC TISTRUCT *TINAME##_pre_next(const TISTRUCT *node)              \
         return node->TIRIGHT;                                           \
                                                                         \
     /**                                                                 \
-     * if we have no children, Go up till we find an ancestor           \
+     * If we have no children, Go up till we find an ancestor           \
      * which have a another right-hand child.                           \
      */                                                                 \
     while ((parent = node->TIPARENT) &&                                 \
@@ -179,6 +180,7 @@ TISTATIC TISTRUCT *TINAME##_post_first(const TIROOT *root)              \
     if (!root || !node)                                                 \
         return NULL;                                                    \
                                                                         \
+    /* Get the left deepest node. */                                    \
     return TINAME##_left_deep(node);                                    \
 }                                                                       \
                                                                         \
@@ -188,9 +190,14 @@ TISTATIC TISTRUCT *TINAME##_post_next(const TISTRUCT *node)             \
                                                                         \
     if (!node)                                                          \
         return NULL;                                                    \
-                                                                        \
     parent = node->TIPARENT;                                            \
                                                                         \
+    /**                                                                 \
+     * If we are the parent's left node, go to the parent's right       \
+     * node then all the way down to the left.                          \
+     * Otherwise we are the parent's right node, and the parent         \
+     * should be next.                                                  \
+     */                                                                 \
     if (parent && node == parent->TILEFT && parent->TIRIGHT)            \
         return TINAME##_left_deep(parent->TIRIGHT);                     \
     else                                                                \
@@ -202,6 +209,7 @@ TISTATIC TISTRUCT *TINAME##_post_next(const TISTRUCT *node)             \
 TISTATIC TISTRUCT *                                                     \
 TINAME##_level_first(const TIROOT *root, unsigned long *index)          \
 {                                                                       \
+    /* Initialize counter and get root node */                          \
     *index = 0;                                                         \
     return root->TINODE;                                                \
 }                                                                       \
